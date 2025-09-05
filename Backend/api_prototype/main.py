@@ -14,7 +14,9 @@ def create_db_and_tables():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    print("アプリケーション起動: データベースのテーブルを作成します...")
     create_db_and_tables()
+    print("テーブル作成完了。")
     yield
 
 
