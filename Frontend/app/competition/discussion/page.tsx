@@ -21,7 +21,8 @@ export default function DiscussionPage() {
 
   // スレッド一覧取得
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/threads`)
+    console.log("API Base URL:", process.env.NEXT_PUBLIC_API_BASE_URL);
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/threads`)
       .then(res => res.json())
       .then(data => setThreads(data))
       .catch(err => {
@@ -55,7 +56,7 @@ export default function DiscussionPage() {
 
     // まず認証テストを実行
     try {
-      const authTestRes = await fetch(`${process.env.REACT_APP_API_URL}/debug/auth`, {
+      const authTestRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/debug/auth`, {
         headers: {
           "Authorization": `Bearer ${token}`,
         },
@@ -80,7 +81,7 @@ export default function DiscussionPage() {
     }
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/threads/`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/threads/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
