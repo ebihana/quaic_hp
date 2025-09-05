@@ -66,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log("ログイン試行:", { email })
       
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login/`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/token/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
