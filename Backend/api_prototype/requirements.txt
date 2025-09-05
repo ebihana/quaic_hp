@@ -5,4 +5,5 @@ python-jose[cryptography]
 passlib[bcrypt]
 python-multipart
 psycopg2-binary
+pydantic_settings
 gunicorn
