@@ -66,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log("ログイン試行:", { email })
       
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/login`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -100,7 +100,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // ユーザー情報を取得
       console.log("ユーザー情報取得中...")
-      const meRes = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/me`, {
+      const meRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me/`, {
         headers: {
           "Authorization": `Bearer ${data.access_token}`,
         },
@@ -136,7 +136,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (name: string, email: string, password: string): Promise<boolean> => {
     setIsLoading(true)
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
