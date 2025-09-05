@@ -23,7 +23,7 @@ app = FastAPI(lifespan=lifespan)
 # CORSミドルウェアなどの設定 ...
 origins = [
     "http://localhost:3000", # Reactのデフォルト開発サーバー
-    "https://quaichpfrontend-3wt1kakzi-hebi0713-1050s-projects.vercel.app"
+    "https://quaichpfrontend-gwph3vnzp-hebi0713-1050s-projects.vercel.app"
     # 必要であれば他のURLも追加できます
 ]
 
