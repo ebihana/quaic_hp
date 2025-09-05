@@ -36,7 +36,7 @@ export default function ModelsPage() {
   const fetchModels = async () => {
     try {
       const token = localStorage.getItem("access_token")
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/models`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/models/`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -73,7 +73,7 @@ export default function ModelsPage() {
     formData.append("model_file", file)
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/models`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/models/`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
