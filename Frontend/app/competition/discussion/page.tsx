@@ -21,7 +21,7 @@ export default function DiscussionPage() {
 
   // スレッド一覧取得
   useEffect(() => {
-    console.log("API Base URL:", process.env.NEXT_PUBLIC_API_BASE_URL);
+    console.log("API Base URL:", process.env.NEXT_PUBLIC_API_URL);
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/threads`)
       .then(res => res.json())
       .then(data => setThreads(data))
