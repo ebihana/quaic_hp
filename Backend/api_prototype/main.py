@@ -23,13 +23,13 @@ app = FastAPI(lifespan=lifespan)
 # CORSミドルウェアなどの設定 ...
 origins = [
     "http://localhost:3000", # Reactのデフォルト開発サーバー
-    "https://quaichpfrontend-gwph3vnzp-hebi0713-1050s-projects.vercel.app"
+    "https://quaic-hp-front.vercel.app'"
     # 必要であれば他のURLも追加できます
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 一時的に全て許可
+    allow_origins=origins,  # 一時的に全て許可
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
