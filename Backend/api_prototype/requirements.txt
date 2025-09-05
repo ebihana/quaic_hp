@@ -3,7 +3,7 @@ uvicorn
 sqlmodel
 python-jose[cryptography]
 passlib[bcrypt]
+bcrypt
 python-multipart
 psycopg2-binary
-pydantic_settings
 gunicorn
