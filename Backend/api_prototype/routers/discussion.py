@@ -17,4 +17,17 @@ def create_thread(
     db: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
+    print(f"スレッド作成リクエスト: {thread.title} by user {current_user.id} ({current_user.name})")
     return crud.create_thread(db, title=thread.title, body=thread.body, author_id=current_user.id)
+
+# デバッグ用エンドポイント
+@router.get("/debug/auth")
+def debug_auth(current_user: User = Depends(get_current_user)):
+    return {
+        "message": "認証成功",
+        "user": {
+            "id": current_user.id,
+            "name": current_user.name,
+            "email": current_user.email
+        }
+    }

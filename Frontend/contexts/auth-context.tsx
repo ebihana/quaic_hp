@@ -64,7 +64,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true)
     setUser(null)
     try {
-      const res = await fetch("http://localhost:8000/login", {
+      console.log("ログイン試行:", { email })
+      
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -74,24 +76,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           password,
         }),
       })
+      
+      console.log("ログインレスポンスステータス:", res.status)
+      
       if (!res.ok) {
+        const errorData = await res.text()
+        console.error("ログインエラー:", errorData)
         setIsLoading(false)
         return false
       }
+      
       const data = await res.json()
+      console.log("ログイン成功、トークン取得:", { access_token: data.access_token ? data.access_token.substring(0, 20) + "..." : "なし" })
+      
+      if (!data.access_token) {
+        console.error("トークンがレスポンスに含まれていません")
+        setIsLoading(false)
+        return false
+      }
+      
       localStorage.setItem("access_token", data.access_token)
+      console.log("トークンをlocalStorageに保存しました")
 
       // ユーザー情報を取得
-      const meRes = await fetch("http://localhost:8000/users/me", {
+      console.log("ユーザー情報取得中...")
+      const meRes = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/me`, {
         headers: {
           "Authorization": `Bearer ${data.access_token}`,
         },
       })
+      
+      console.log("ユーザー情報レスポンスステータス:", meRes.status)
+      
       if (!meRes.ok) {
+        const errorData = await meRes.text()
+        console.error("ユーザー情報取得エラー:", errorData)
         setIsLoading(false)
         return false
       }
+      
       const me = await meRes.json()
+      console.log("ユーザー情報取得成功:", me)
+      
       setUser({
         id: me.id ?? "",
         name: me.name ?? email.split("@")[0],
@@ -101,6 +127,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(false)
       return true
     } catch (e) {
+      console.error("ログイン処理エラー:", e)
       setIsLoading(false)
       return false
     }
@@ -109,7 +136,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (name: string, email: string, password: string): Promise<boolean> => {
     setIsLoading(true)
     try {
-      const res = await fetch("http://localhost:8000/users/", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -138,6 +165,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     setUser(null)
+    localStorage.removeItem("access_token")
+    localStorage.removeItem("user")
   }
 
   return <AuthContext.Provider value={{ user, login, register, logout, isLoading }}>{children}</AuthContext.Provider>

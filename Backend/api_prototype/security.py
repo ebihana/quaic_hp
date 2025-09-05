@@ -49,19 +49,26 @@ async def get_current_user(
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
+        print(f"トークン検証開始: {token[:20]}...")
         # トークンをデコードしてペイロード(中身)を取得
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
+        print(f"トークンペイロード: {payload}")
         username: str | None = payload.get("sub")
         if username is None:
+            print("トークンにsubフィールドがありません")
             raise credentials_exception
-    except JWTError:
+        print(f"トークンから取得したusername: {username}")
+    except JWTError as e:
+        print(f"JWTデコードエラー: {e}")
         raise credentials_exception
 
     # ペイロードから取得したusernameでユーザーを検索
     statement = select(User).where(User.name == username)
     user = session.exec(statement).first()
     if user is None:
+        print(f"ユーザーが見つかりません: {username}")
         raise credentials_exception
+    print(f"ユーザー認証成功: {user.name} (ID: {user.id})")
     return user
