@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Trophy, BookOpen } from "lucide-react"
+import { Home, Trophy, BookOpen, ExternalLink } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 
@@ -25,6 +25,12 @@ export default function Sidebar() {
       href: "/tutorial",
       icon: BookOpen,
     },
+    {
+      name: "AI recipe",
+      href: "https://github.com/ukinsama/Qugeister_clean",
+      icon: ExternalLink,
+      external: true,
+    },
   ]
 
   return (
@@ -38,21 +44,41 @@ export default function Sidebar() {
         </div>
       </div>
       <nav className="space-y-1 px-4">
-        {menuItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={cn(
-              "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
-              pathname === item.href || pathname.startsWith(`${item.href}/`)
-                ? "bg-blue-700 text-white"
-                : "text-blue-100 hover:bg-blue-700 hover:text-white",
-            )}
-          >
-            <item.icon className="h-5 w-5" />
-            {item.name}
-          </Link>
-        ))}
+        {menuItems.map((item) => {
+          if (item.external) {
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
+                  "text-blue-100 hover:bg-blue-700 hover:text-white"
+                )}
+              >
+                <item.icon className="h-5 w-5" />
+                {item.name}
+              </a>
+            )
+          }
+          
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
+                pathname === item.href || pathname.startsWith(`${item.href}/`)
+                  ? "bg-blue-700 text-white"
+                  : "text-blue-100 hover:bg-blue-700 hover:text-white",
+              )}
+            >
+              <item.icon className="h-5 w-5" />
+              {item.name}
+            </Link>
+          )
+        })}
       </nav>
     </div>
   )

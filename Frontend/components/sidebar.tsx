@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Trophy, BookOpen, ExternalLink } from "lucide-react"
+import { Home, FileText, BookOpen, Upload, BarChart3 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 
@@ -16,20 +16,24 @@ export default function Sidebar() {
       icon: Home,
     },
     {
-      name: "Competition",
-      href: "/competition",
-      icon: Trophy,
+      name: "Competition Overview",
+      href: "/competition-overview",
+      icon: FileText,
     },
     {
-      name: "Tutorial",
-      href: "/tutorial",
+      name: "AI Recipe",
+      href: "/ai-recipe",
       icon: BookOpen,
     },
     {
-      name: "AI recipe",
-      href: "https://github.com/ukinsama/Qugeister_clean",
-      icon: ExternalLink,
-      external: true,
+      name: "Submission",
+      href: "/submission",
+      icon: Upload,
+    },
+    {
+      name: "Leaderboard",
+      href: "/leaderboard",
+      icon: BarChart3,
     },
   ]
 
@@ -45,24 +49,6 @@ export default function Sidebar() {
       </div>
       <nav className="space-y-1 px-4">
         {menuItems.map((item) => {
-          if (item.external) {
-            return (
-              <a
-                key={item.href}
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(
-                  "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
-                  "text-blue-100 hover:bg-blue-700 hover:text-white"
-                )}
-              >
-                <item.icon className="h-5 w-5" />
-                {item.name}
-              </a>
-            )
-          }
-          
           return (
             <Link
               key={item.href}
