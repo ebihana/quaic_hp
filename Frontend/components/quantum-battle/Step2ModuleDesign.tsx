@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { QuantumBattleConfig } from '../../types/quantum-battle';
-import Module1Placement from './modules/Module1Placement.tsx';
-import Module2Quantum from './modules/Module2Quantum.tsx';
-import Module3Reward from './modules/Module3Reward.tsx';
-import Module4QMap from './modules/Module4QMap.tsx';
-import Module5Action from './modules/Module5Action.tsx';
+import Module1Placement from './modules/Module1Placement';
+import Module2Quantum from './modules/Module2Quantum';
+import Module3Reward from './modules/Module3Reward';
+import Module4QMap from './modules/Module4QMap';
+import Module5Action from './modules/Module5Action';
 
 interface Step2ModuleDesignProps {
   config: QuantumBattleConfig;
