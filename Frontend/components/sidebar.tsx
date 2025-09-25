@@ -17,7 +17,7 @@ export default function Sidebar() {
     },
     {
       name: "Competition Overview",
-      href: "/competition-overview",
+      href: "/competition/overview",
       icon: FileText,
     },
     {
