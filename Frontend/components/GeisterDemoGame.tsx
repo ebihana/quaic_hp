@@ -338,7 +338,7 @@ export default function GeisterDemoGame() {
       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-lg font-bold ${
         isHuman 
           ? (isGood ? 'bg-green-300 text-green-800' : 'bg-red-300 text-red-800')
-          : (isGood ? 'bg-blue-300 text-blue-800' : 'bg-gray-400 text-gray-800')
+          : 'bg-gray-400 text-gray-800'
       } ${isSelected ? 'ring-2 ring-yellow-400' : ''}`}>
         {isHuman ? (isGood ? '○' : '●') : '?'}
       </div>
