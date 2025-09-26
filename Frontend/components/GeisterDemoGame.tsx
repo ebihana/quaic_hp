@@ -93,32 +93,39 @@ export default function GeisterDemoGame() {
     return false;
   };
 
-  const checkWinCondition = (board: (Piece | null)[][]): 'human_wins' | 'ai_wins' | 'playing' => {
-    // 人間の善玉が脱出口にいるかチェック
-    const humanGoodAtExit = board[0][0]?.player === 'human' && board[0][0]?.type === 'good' ||
-                           board[5][0]?.player === 'human' && board[5][0]?.type === 'good';
+  const checkWinCondition = (board: (Piece | null)[][], counts?: { human: { good: number; bad: number }, ai: { good: number; bad: number } }): 'human_wins' | 'ai_wins' | 'playing' => {
+    // 人間の善玉が脱出口にいるかチェック（上側左右端: (0,0), (5,0)）
+    const humanGoodAtExit = (board[0][0]?.player === 'human' && board[0][0]?.type === 'good') ||
+                            (board[0][5]?.player === 'human' && board[0][5]?.type === 'good');
     
-    // AIの善玉が脱出口にいるかチェック
-    const aiGoodAtExit = board[0][5]?.player === 'ai' && board[0][5]?.type === 'good' ||
-                        board[5][5]?.player === 'ai' && board[5][5]?.type === 'good';
+    // AIの善玉が脱出口にいるかチェック（下側左右端: (0,5), (5,5)）
+    const aiGoodAtExit = (board[5][0]?.player === 'ai' && board[5][0]?.type === 'good') ||
+                         (board[5][5]?.player === 'ai' && board[5][5]?.type === 'good');
     
     if (humanGoodAtExit) return 'human_wins';
     if (aiGoodAtExit) return 'ai_wins';
     
-    // 善玉の数チェック
-    let humanGoodCount = 0;
-    let aiGoodCount = 0;
-    
-    for (let y = 0; y < 6; y++) {
-      for (let x = 0; x < 6; x++) {
-        const piece = board[y][x];
-        if (piece?.player === 'human' && piece?.type === 'good') humanGoodCount++;
-        if (piece?.player === 'ai' && piece?.type === 'good') aiGoodCount++;
+    // カウントが渡されていればそれで勝敗を評価（効率的）
+    if (counts) {
+      if (counts.human.good === 0) return 'ai_wins';
+      if (counts.ai.good === 0) return 'human_wins';
+      // 自分の悪玉を全て取らせたら勝ち
+      if (counts.human.bad === 0) return 'human_wins';
+      if (counts.ai.bad === 0) return 'ai_wins';
+    } else {
+      // 互換: 盤面から善玉数だけ数える
+      let humanGoodCount = 0;
+      let aiGoodCount = 0;
+      for (let y = 0; y < 6; y++) {
+        for (let x = 0; x < 6; x++) {
+          const piece = board[y][x];
+          if (piece?.player === 'human' && piece?.type === 'good') humanGoodCount++;
+          if (piece?.player === 'ai' && piece?.type === 'good') aiGoodCount++;
+        }
       }
+      if (humanGoodCount === 0) return 'ai_wins';
+      if (aiGoodCount === 0) return 'human_wins';
     }
-    
-    if (humanGoodCount === 0) return 'ai_wins';
-    if (aiGoodCount === 0) return 'human_wins';
     
     return 'playing';
   };
@@ -136,18 +143,53 @@ export default function GeisterDemoGame() {
         const movingPiece = newBoard[fromY][fromX];
         
         if (movingPiece && movingPiece.player === 'human') {
+          // 自駒の上には移動できない
+          const targetPieceSame = newBoard[y][x] && (newBoard[y][x] as Piece).player === 'human';
+          if (targetPieceSame) {
+            setMessage('自分の駒がいるマスには移動できません。');
+            setGameState(prev => ({ ...prev, selectedPiece: null }));
+            return;
+          }
+
+          // 脱出口への移動は善玉のみ可
+          const isHumanExit = (y === 0 && (x === 0 || x === 5));
+          if (isHumanExit && movingPiece.type !== 'good') {
+            setMessage('脱出できるのは善玉のみです。');
+            setGameState(prev => ({ ...prev, selectedPiece: null }));
+            return;
+          }
+
           // 移動先に駒があるかチェック
           const targetPiece = newBoard[y][x];
           if (targetPiece && targetPiece.player === 'ai') {
             // 駒を取る
             setMessage(`AIの${targetPiece.type === 'good' ? '善玉' : '悪玉'}を取った！`);
+            // カウント更新（AIの駒が減る）
+            const newAiCounts = {
+              good: gameState.aiPieces.good - (targetPiece.type === 'good' ? 1 : 0),
+              bad: gameState.aiPieces.bad - (targetPiece.type === 'bad' ? 1 : 0),
+            };
+            // 駒を移動（捕獲）
+            newBoard[y][x] = movingPiece;
+            newBoard[fromY][fromX] = null;
+            const result = checkWinCondition(newBoard, { human: gameState.humanPieces, ai: newAiCounts });
+            if (result !== 'playing') {
+              setGameState(prev => ({ ...prev, board: newBoard, gameStatus: result, selectedPiece: null, aiPieces: newAiCounts }));
+              setMessage(result === 'human_wins' ? '🎉 あなたの勝利！' : '🤖 AIの勝利！');
+              return;
+            }
+            // 続行（ターン移行）
+            setGameState(prev => ({ ...prev, board: newBoard, aiPieces: newAiCounts, currentPlayer: 'ai', selectedPiece: null }));
+            setMessage('AIのターンです...');
+            setTimeout(() => { makeAIMove(newBoard); }, 1000);
+            return;
           }
           
           // 駒を移動
           newBoard[y][x] = movingPiece;
           newBoard[fromY][fromX] = null;
           
-          const winCondition = checkWinCondition(newBoard);
+          const winCondition = checkWinCondition(newBoard, { human: gameState.humanPieces, ai: gameState.aiPieces });
           if (winCondition !== 'playing') {
             setGameState(prev => ({
               ...prev,
@@ -202,32 +244,66 @@ export default function GeisterDemoGame() {
     const randomPiece = aiPieces[Math.floor(Math.random() * aiPieces.length)];
     const [fromX, fromY] = randomPiece.position;
     
-    // 可能な移動先を探す
+    // 可能な移動先を探す（自駒の上は不可／悪玉は脱出不可）
     const possibleMoves: [number, number][] = [];
-    const directions = [[0, 1], [0, -1], [1, 0], [-1, 0]];
-    
-    for (const [dx, dy] of directions) {
-      const newX = fromX + dx;
-      const newY = fromY + dy;
-      if (isValidMove([fromX, fromY], [newX, newY])) {
-        possibleMoves.push([newX, newY]);
+    const captureMoves: [number, number][] = [];
+    const winningMoves: [number, number][] = [];
+    const directions = [[0, 1], [0, -1], [1, 0], [-1, 0]] as const;
+    for (const { piece, position } of aiPieces) {
+      const [fx, fy] = position;
+      for (const [dx, dy] of directions) {
+        const nx = fx + dx;
+        const ny = fy + dy;
+        if (!isValidMove([fx, fy], [nx, ny])) continue;
+        if (nx < 0 || nx >= 6 || ny < 0 || ny >= 6) continue;
+        const target = board[ny][nx];
+        if (target && target.player === 'ai') continue; // 自駒の上は不可
+        const isAiExit = (ny === 5 && (nx === 0 || nx === 5));
+        if (isAiExit && piece.type !== 'good') continue; // 脱出は善玉のみ
+        // 勝てるなら優先
+        if (isAiExit && piece.type === 'good') {
+          winningMoves.push([fx, fy, nx, ny] as unknown as [number, number]);
+        }
+        if (target && target.player === 'human') {
+          captureMoves.push([fx, fy, nx, ny] as unknown as [number, number]);
+        }
+        possibleMoves.push([fx, fy, nx, ny] as unknown as [number, number]);
       }
     }
     
-    if (possibleMoves.length > 0) {
-      const [toX, toY] = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+    const choose = (moves: [number, number][][] | [number, number][]) => moves[Math.floor(Math.random() * moves.length)];
+    const moveList = winningMoves.length ? winningMoves : (captureMoves.length ? captureMoves : possibleMoves);
+    if (moveList.length > 0) {
+      const mv = moveList[Math.floor(Math.random() * moveList.length)] as unknown as [number, number, number, number];
+      const [fx, fy, toX, toY] = mv;
       const newBoard = board.map(row => [...row]);
-      const movingPiece = newBoard[fromY][fromX];
+      const movingPiece = newBoard[fy][fx];
       const targetPiece = newBoard[toY][toX];
       
       if (targetPiece && targetPiece.player === 'human') {
         setMessage(`AIがあなたの${targetPiece.type === 'good' ? '善玉' : '悪玉'}を取った！`);
+        // カウント更新（人間の駒が減る）
+        const newHumanCounts = {
+          good: gameState.humanPieces.good - (targetPiece.type === 'good' ? 1 : 0),
+          bad: gameState.humanPieces.bad - (targetPiece.type === 'bad' ? 1 : 0),
+        };
+        newBoard[toY][toX] = movingPiece;
+        newBoard[fy][fx] = null;
+        const result = checkWinCondition(newBoard, { human: newHumanCounts, ai: gameState.aiPieces });
+        if (result !== 'playing') {
+          setGameState(prev => ({ ...prev, board: newBoard, gameStatus: result, humanPieces: newHumanCounts }));
+          setMessage(result === 'ai_wins' ? '🤖 AIの勝利！' : '🎉 あなたの勝利！');
+          return;
+        }
+        setGameState(prev => ({ ...prev, board: newBoard, humanPieces: newHumanCounts, currentPlayer: 'human' }));
+        setMessage('あなたのターンです。駒をクリックして移動してください。');
+        return;
       }
       
       newBoard[toY][toX] = movingPiece;
-      newBoard[fromY][fromX] = null;
+      newBoard[fy][fx] = null;
       
-      const winCondition = checkWinCondition(newBoard);
+      const winCondition = checkWinCondition(newBoard, { human: gameState.humanPieces, ai: gameState.aiPieces });
       if (winCondition !== 'playing') {
         setGameState(prev => ({
           ...prev,
@@ -284,8 +360,8 @@ export default function GeisterDemoGame() {
           {Array.from({ length: 36 }, (_, index) => {
             const x = index % 6;
             const y = Math.floor(index / 6);
-            const isEscapeA = (x === 0 && y === 0) || (x === 5 && y === 0);
-            const isEscapeB = (x === 0 && y === 5) || (x === 5 && y === 5);
+            const isEscapeA = (y === 0 && (x === 0 || x === 5));
+            const isEscapeB = (y === 5 && (x === 0 || x === 5));
             
             return (
               <div
