@@ -175,7 +175,7 @@ export default function OverviewPage() {
               <div className="bg-blue-50 p-4 rounded-lg">
                 <h3 className="text-lg font-semibold text-blue-900 mb-2">🎯 ゲームの目的</h3>
                 <p className="text-blue-800">
-                  ガイスターは2人対戦の不完全情報ゲームです。相手の善いおばけ（○）をすべて取るか、自分の善いおばけを相手の陣地の角（脱出口）に移動させることで勝利します。
+                  ガイスターは2人対戦の不完全情報ゲームです。相手の良いおばけ（○）をすべて取るか、自分の良いおばけを相手の陣地の角（脱出口）に移動させることで勝利します。
                 </p>
               </div>
 
