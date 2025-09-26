@@ -10,26 +10,25 @@ import Image from "next/image"
 export default function LeaderboardPage() {
   return (
     <div className="space-y-6">
-      <Tabs defaultValue="public">
+      <Tabs defaultValue="limited">
         <TabsList>
-          <TabsTrigger value="public">Public Leaderboard</TabsTrigger>
-          <TabsTrigger value="private">Private Leaderboard</TabsTrigger>
+          <TabsTrigger value="limited">制限付きコンペティション</TabsTrigger>
+          <TabsTrigger value="open">オープンコンペティション</TabsTrigger>
         </TabsList>
-        <TabsContent value="public" className="mt-4">
+        <TabsContent value="limited" className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Public Leaderboard</CardTitle>
-              <CardDescription>Rankings based on 30% of the test data</CardDescription>
+              <CardTitle>制限付きコンペティション</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-16">Rank</TableHead>
-                    <TableHead>Team</TableHead>
-                    <TableHead>Score</TableHead>
-                    <TableHead className="hidden md:table-cell">Submissions</TableHead>
-                    <TableHead className="hidden md:table-cell">Last Submission</TableHead>
+                    <TableHead>Model name</TableHead>
+                    <TableHead>Rating</TableHead>
+                    <TableHead className="hidden md:table-cell">Win rate</TableHead>
+                    <TableHead className="hidden md:table-cell">Last submission</TableHead>
                     <TableHead className="hidden md:table-cell">Game Record</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -230,10 +229,10 @@ export default function LeaderboardPage() {
             </CardContent>
           </Card>
         </TabsContent>
-        <TabsContent value="private" className="mt-4">
+        <TabsContent value="open" className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Private Leaderboard</CardTitle>
+              <CardTitle>オープンコンペティション</CardTitle>
               <CardDescription>Final rankings will be revealed when the competition ends</CardDescription>
             </CardHeader>
             <CardContent>
