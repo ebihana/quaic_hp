@@ -163,7 +163,7 @@ export default function GeisterDemoGame() {
           const targetPiece = newBoard[y][x];
           if (targetPiece && targetPiece.player === 'ai') {
             // 駒を取る
-            setMessage(`AIの${targetPiece.type === 'good' ? '善玉' : '悪玉'}を取った！`);
+            setMessage(`AIの${targetPiece.type === 'good' ? '良いおばけ' : '悪いおばけ'}を取った！`);
             // カウント更新（AIの駒が減る）
             const newAiCounts = {
               good: gameState.aiPieces.good - (targetPiece.type === 'good' ? 1 : 0),
@@ -281,7 +281,7 @@ export default function GeisterDemoGame() {
       const targetPiece = newBoard[toY][toX];
       
       if (targetPiece && targetPiece.player === 'human') {
-        setMessage(`AIがあなたの${targetPiece.type === 'good' ? '善玉' : '悪玉'}を取った！`);
+        setMessage(`AIがあなたの${targetPiece.type === 'good' ? '良いおばけ' : '悪いおばけ'}を取った！`);
         // カウント更新（人間の駒が減る）
         const newHumanCounts = {
           good: gameState.humanPieces.good - (targetPiece.type === 'good' ? 1 : 0),
@@ -350,7 +350,7 @@ export default function GeisterDemoGame() {
       <div className="text-center">
         <p className="text-sm text-gray-700 mb-2">{message}</p>
         <div className="flex justify-center gap-4 text-sm">
-          <span className="px-3 py-1 bg-green-100 text-green-800 rounded">あなた: ○善玉 ●悪玉</span>
+          <span className="px-3 py-1 bg-green-100 text-green-800 rounded">あなた: ○良いおばけ ●悪いおばけ</span>
           <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded">AI: ?駒（種類不明）</span>
         </div>
       </div>

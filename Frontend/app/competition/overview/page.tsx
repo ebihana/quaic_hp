@@ -106,7 +106,7 @@ export default function OverviewPage() {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
             <CardTitle>重要な日程</CardTitle>
@@ -154,7 +154,7 @@ export default function OverviewPage() {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
         </div>
       )}
 
@@ -175,25 +175,25 @@ export default function OverviewPage() {
               <div className="bg-blue-50 p-4 rounded-lg">
                 <h3 className="text-lg font-semibold text-blue-900 mb-2">🎯 ゲームの目的</h3>
                 <p className="text-blue-800">
-                  ガイスターは2人対戦の不完全情報ゲームです。相手の善玉（○）をすべて取るか、自分の善玉を相手の陣地の角（脱出口）に移動させることで勝利します。
+                  ガイスターは2人対戦の不完全情報ゲームです。相手の善いおばけ（○）をすべて取るか、自分の善いおばけを相手の陣地の角（脱出口）に移動させることで勝利します。
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="text-lg font-semibold mb-3">♟️ 駒の種類</h3>
+                <h3 className="text-lg font-semibold mb-3">♟️ 駒の種類</h3>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-green-300 rounded-full flex items-center justify-center text-green-800 font-bold">○</div>
                       <div>
-                        <strong>善玉（○）</strong>
-                        <p className="text-sm text-gray-600">相手の善玉を取るか、脱出口に移動させると勝利</p>
+                        <strong>良いおばけ（○）</strong>
+                        <p className="text-sm text-gray-600">相手の良いおばけを取るか、脱出口に移動させると勝利</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-red-300 rounded-full flex items-center justify-center text-red-800 font-bold">●</div>
                       <div>
-                        <strong>悪玉（●）</strong>
+                        <strong>悪いおばけ（●）</strong>
                         <p className="text-sm text-gray-600">相手に取らせると相手に有利になる駒</p>
                       </div>
                     </div>
@@ -205,7 +205,7 @@ export default function OverviewPage() {
                   <ol className="space-y-2 text-sm">
                     <li className="flex items-start gap-2">
                       <span className="bg-indigo-100 text-indigo-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">1</span>
-                      <span>各プレイヤーは善玉4個、悪玉4個を自分の陣地に配置</span>
+                      <span>各プレイヤーは良いおばけ4個、悪いおばけ4個を自分の陣地に配置</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="bg-indigo-100 text-indigo-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">2</span>
@@ -227,12 +227,12 @@ export default function OverviewPage() {
                 <h3 className="text-lg font-semibold mb-3">🏆 勝利条件</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-green-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-green-900 mb-2">条件1: 善玉の脱出</h4>
-                    <p className="text-sm text-green-800">自分の善玉を相手の陣地の角（脱出口）に移動させる</p>
+                    <h4 className="font-semibold text-green-900 mb-2">条件1: 良いおばけの脱出</h4>
+                    <p className="text-sm text-green-800">自分の良いおばけを相手の陣地の角（脱出口）に移動させる</p>
                   </div>
                   <div className="bg-red-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-red-900 mb-2">条件2: 善玉の全取得</h4>
-                    <p className="text-sm text-red-800">相手の善玉をすべて取る</p>
+                    <h4 className="font-semibold text-red-900 mb-2">条件2: 良いおばけの全取得</h4>
+                    <p className="text-sm text-red-800">相手の良いおばけをすべて取る</p>
                   </div>
                 </div>
               </div>
@@ -244,7 +244,7 @@ export default function OverviewPage() {
                     <div className="w-6 h-6 bg-yellow-100 text-yellow-800 rounded-full flex items-center justify-center text-xs font-bold">!</div>
                     <div>
                       <strong>不完全情報</strong>
-                      <p className="text-sm text-gray-600">相手の駒の種類（善玉/悪玉）は最初は分からない</p>
+                      <p className="text-sm text-gray-600">相手の駒の種類（良いおばけ/悪いおばけ）は最初は分からない</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -268,8 +268,8 @@ export default function OverviewPage() {
                 <h3 className="text-lg font-semibold mb-3">💡 戦略のヒント</h3>
                 <ul className="space-y-2 text-sm">
                   <li>• 相手の駒の種類を推測しながら戦略を立てる</li>
-                  <li>• 善玉の脱出ルートを確保する</li>
-                  <li>• 悪玉を相手に取らせて戦略的優位を得る</li>
+                  <li>• 良いおばけの脱出ルートを確保する</li>
+                  <li>• 悪いおばけを相手に取らせて戦略的優位を得る</li>
                   <li>• 相手の動きを観察してパターンを読み取る</li>
                 </ul>
               </div>
