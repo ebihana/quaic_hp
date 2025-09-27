@@ -154,7 +154,7 @@ export default function GeisterDemoGame() {
           // 脱出口への移動は善玉のみ可
           const isHumanExit = (y === 0 && (x === 0 || x === 5));
           if (isHumanExit && movingPiece.type !== 'good') {
-            setMessage('脱出できるのは善玉のみです。');
+            setMessage('脱出できるのは良いおばけのみです。');
             setGameState(prev => ({ ...prev, selectedPiece: null }));
             return;
           }
@@ -175,12 +175,12 @@ export default function GeisterDemoGame() {
             const result = checkWinCondition(newBoard, { human: gameState.humanPieces, ai: newAiCounts });
             if (result !== 'playing') {
               setGameState(prev => ({ ...prev, board: newBoard, gameStatus: result, selectedPiece: null, aiPieces: newAiCounts }));
-              setMessage(result === 'human_wins' ? '🎉 あなたの勝利！' : '🤖 AIの勝利！');
+              setMessage(result === 'human_wins' ? '🎉 あなたの勝利！' : '🤖 CPUの勝利！');
               return;
             }
             // 続行（ターン移行）
             setGameState(prev => ({ ...prev, board: newBoard, aiPieces: newAiCounts, currentPlayer: 'ai', selectedPiece: null }));
-            setMessage('AIのターンです...');
+            setMessage('CPUのターンです...');
             setTimeout(() => { makeAIMove(newBoard); }, 1000);
             return;
           }
@@ -197,7 +197,7 @@ export default function GeisterDemoGame() {
               gameStatus: winCondition,
               selectedPiece: null
             }));
-            setMessage(winCondition === 'human_wins' ? '🎉 あなたの勝利！' : '🤖 AIの勝利！');
+            setMessage(winCondition === 'human_wins' ? '🎉 あなたの勝利！' : '🤖 CPUの勝利！');
             return;
           }
           
@@ -207,7 +207,7 @@ export default function GeisterDemoGame() {
             currentPlayer: 'ai',
             selectedPiece: null
           }));
-          setMessage('AIのターンです...');
+          setMessage('CPUのターンです...');
           
           // AIのターン
           setTimeout(() => {
@@ -281,7 +281,7 @@ export default function GeisterDemoGame() {
       const targetPiece = newBoard[toY][toX];
       
       if (targetPiece && targetPiece.player === 'human') {
-        setMessage(`AIがあなたの${targetPiece.type === 'good' ? '良いおばけ' : '悪いおばけ'}を取った！`);
+        setMessage(`CPUがあなたの${targetPiece.type === 'good' ? '良いおばけ' : '悪いおばけ'}を取った！`);
         // カウント更新（人間の駒が減る）
         const newHumanCounts = {
           good: gameState.humanPieces.good - (targetPiece.type === 'good' ? 1 : 0),
@@ -292,7 +292,7 @@ export default function GeisterDemoGame() {
         const result = checkWinCondition(newBoard, { human: newHumanCounts, ai: gameState.aiPieces });
         if (result !== 'playing') {
           setGameState(prev => ({ ...prev, board: newBoard, gameStatus: result, humanPieces: newHumanCounts }));
-          setMessage(result === 'ai_wins' ? '🤖 AIの勝利！' : '🎉 あなたの勝利！');
+          setMessage(result === 'ai_wins' ? '🤖 CPUの勝利！' : '🎉 あなたの勝利！');
           return;
         }
         setGameState(prev => ({ ...prev, board: newBoard, humanPieces: newHumanCounts, currentPlayer: 'human' }));
@@ -310,7 +310,7 @@ export default function GeisterDemoGame() {
           board: newBoard,
           gameStatus: winCondition
         }));
-        setMessage(winCondition === 'ai_wins' ? '🤖 AIの勝利！' : '🎉 あなたの勝利！');
+        setMessage(winCondition === 'ai_wins' ? '🤖 CPUの勝利！' : '🎉 あなたの勝利！');
         return;
       }
       
@@ -351,7 +351,7 @@ export default function GeisterDemoGame() {
         <p className="text-sm text-gray-700 mb-2">{message}</p>
         <div className="flex justify-center gap-4 text-sm">
           <span className="px-3 py-1 bg-green-100 text-green-800 rounded">あなた: ○良いおばけ ●悪いおばけ</span>
-          <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded">AI: ?駒（種類不明）</span>
+          <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded">CPU: ?駒（種類不明）</span>
         </div>
       </div>
       
@@ -374,7 +374,7 @@ export default function GeisterDemoGame() {
                 onClick={() => handleCellClick(x, y)}
                 title={
                   isEscapeA ? '人間の脱出口' :
-                  isEscapeB ? 'AIの脱出口' :
+                  isEscapeB ? 'CPUの脱出口' :
                   `(${x}, ${y})`
                 }
               >
@@ -395,7 +395,7 @@ export default function GeisterDemoGame() {
         {gameState.gameStatus !== 'playing' && (
           <div className="text-lg font-bold text-center">
             {gameState.gameStatus === 'human_wins' && '🎉 あなたの勝利！'}
-            {gameState.gameStatus === 'ai_wins' && '🤖 AIの勝利！'}
+            {gameState.gameStatus === 'ai_wins' && '🤖 CPUの勝利！'}
           </div>
         )}
       </div>
